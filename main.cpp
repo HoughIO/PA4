@@ -132,24 +132,27 @@ int main()
                         exprTree.buildTree(infix);
 			exprTree.printTree();
 		}
-		if(sel == "3" && infix.size() != 0){
-			cout << "Expression from user: " << infix << endl;
-			cout << "INFIX Expression: " << infix << endl;
-		}
-
-		else{
-			cout << "Expression from user input is empty!" << endl;	
+		if(sel == "3" ){
+			if(infix.size() != 0){
+				cout << "Expression from user: " << infix << endl;
+				cout << "INFIX Expression: " << infix << endl;
+			}
+			else{
+				cout << "Expression from user input is empty!" << endl;	
+			}
 		}
 		
-		if(sel == "4" && infix.size() != 0){
-			cout << "Expression from user input: " << infix << endl;
-			cout << "Outputting postifx:" << endl;
-			infix2postfix(infix);
+		if(sel == "4" ){
+			if(infix.size() != 0){
+				cout << "Expression from user input: " << infix << endl;
+				cout << "Outputting postifx:" << endl;
+				infix2postfix(infix);
+			}
+			else{
+				cout << "Expression from user input is empty!" << endl;	
+			}
 		}
 
-		else{
-			cout << "Expression from user input is empty!" << endl;	
-		}
 			
 	}while (more);
 } //end of program
