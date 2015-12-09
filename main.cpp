@@ -42,7 +42,7 @@ int main()
 		if(sel == "4" && infix.size() != 0){
 			cout << "Expression from user input: " << infix << endl;
 			cout << "Outputting postifx:" << endl;
-			exprTree.postfix(exprTree.root);
+			exprTree.printPost();
 		}
 
 		else{

@@ -32,20 +32,23 @@ const int FORMAT_WIDTH = 3;  // It is for the display of a tree structure: the w
 class ParseTree
 {
 private:
-public:
 	TreeNode* root;				// points to the root of the tree
+public:
 	ParseTree();			//constructor
         ParseTree(string key);
 	~ParseTree();			//destructor
         void buildTree(string E);
 		void setNode(TreeNode&);
         int getHeight();
+	int getPostfix();
         void printTree();               // show the tree in a figure
-	void postfix(TreeNode* T);
+	void printPost();
+	
 	
 	// ------------------------------------------
         void destroy(TreeNode* T);
         int height(TreeNode* T);
+ 	int postfix(TreeNode* T);
 };
 
 

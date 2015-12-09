@@ -129,13 +129,28 @@ void ParseTree::buildTree(string E)
 
 void ParseTree::postfix(TreeNode* T)
 {
-	if  (T != NULL)    
-	{    
-		cout<< "left: " << (left) <<endl;
-		cout<< "right: "<< (right) <<endl;;
+        int hh = 0;
+        int lh, rh;
+        if (T == NULL) return hh;
+        if ((T->left == NULL) && (T->right == NULL)) return (hh++);
 
-		cout <<  "T: "<< T << endl;
-	}
+        lh = postfix(T->left);
+        rh = postfix(T->right);
+	
+	cout << lh << "-" << rh << endl;
+        if (lh >= rh)
+            hh = lh + 1;
+        else
+            hh = rh + 1;
+        return hh;
+}
+
+int ParseTree::getPostfix()
+{
+    if (root == NULL)
+        return 0;
+    else
+        return (postfix(root));
 }
 
 // display the parse tree strcture visually
@@ -145,6 +160,66 @@ void ParseTree::printTree()
         queue<int> levelList;
         TreeNode* current = NULL;
         int printDepth = this->getHeight();
+        int possibleNodes = static_cast<int>(pow(2.0, printDepth + 1));
+        int countNodes = 0;
+        
+        nodes.push(root);
+        int currentLevel = 0;
+        int previousLevel = -1;
+        levelList.push(currentLevel);
+        
+        while (countNodes < possibleNodes) 
+        {
+            countNodes = countNodes + 1;
+            if (!nodes.empty())  
+            {    
+                current = nodes.front();
+                nodes.pop();
+            }
+            if (!levelList.empty())
+            {    
+                currentLevel = levelList.front();
+                levelList.pop();
+            }
+            if (currentLevel > previousLevel)
+            {
+                cout << endl << endl;
+                previousLevel = currentLevel;
+                for (int j = 0; j < int ((pow(2.0, (printDepth - currentLevel))) - 1); j++)
+                    cout << setw(FORMAT_WIDTH)<< " ";
+            }
+            else
+            {
+                for (int i = 0; i < int ((pow(2.0, (printDepth - currentLevel + 1)) - 1)) ; i++) 
+                {
+                    cout << setw(FORMAT_WIDTH) <<" ";
+                }
+            }
+            if (current != NULL)
+            {
+                cout << setw(FORMAT_WIDTH) << current->key;
+                nodes.push(current->left);
+                levelList.push(currentLevel + 1);
+                nodes.push(current->right);
+                levelList.push(currentLevel + 1);
+            }
+            else {
+                nodes.push(NULL);
+                levelList.push(currentLevel + 1);
+                nodes.push(NULL);
+                levelList.push(currentLevel + 1);
+                cout << setw(FORMAT_WIDTH) << " ";
+            }
+
+        }
+}
+
+void ParseTree::printPost() 
+{
+        queue<TreeNode*> nodes;
+        queue<int> levelList;
+        TreeNode* current = NULL;
+        int printDepth = this->getPostfix();
         int possibleNodes = static_cast<int>(pow(2.0, printDepth + 1));
         int countNodes = 0;
         
