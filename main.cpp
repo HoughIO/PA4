@@ -1,3 +1,9 @@
+/*
+Name: Graham Hough
+Section: 1
+Class: CS216
+*/
+
 #include <string>
 #include <iterator>
 #include <stack>
@@ -12,33 +18,33 @@ using namespace std;
 
 bool TryParse(const string &symbol);
 int Priority(const string &c);
-bool isOperator(const string &c);
+bool isAnOperator(const string &c);
 int infix2postfix(string infix)
 {
-    istringstream iss(infix);
-    vector<string> tokens;//store the tokens here
-    while(iss)
+    istringstream isAString(infix);
+    vector<string> positionaltok;
+    while(isAString)
     {
         string temp;
-        iss >>temp;
-        tokens.push_back(temp);
+        isAString >>temp;
+        positionaltok.push_back(temp);
     }
     vector<string> outputList;//output vector
     stack<string> s;//main stack
  
     //operator: +, -, *, /, ^, ()
     //operands: 1234567890
-    for(unsigned int i = 0; i < tokens.size(); i++)  //read from right to left
+    for(unsigned int i = 0; i < positionaltok.size(); i++)  //read from right to left
     {
-        if(TryParse(tokens[i]))
+        if(TryParse(positionaltok[i]))
         {
-            outputList.push_back(tokens[i]);
+            outputList.push_back(positionaltok[i]);
         }
-        if(tokens[i] == "(")
+        if(positionaltok[i] == "(")
         {
-            s.push(tokens[i]);
+            s.push(positionaltok[i]);
         }
-        if(tokens[i] == ")")
+        if(positionaltok[i] == ")")
         {
             while(!s.empty() && s.top() != "(")
             {
@@ -47,14 +53,14 @@ int infix2postfix(string infix)
             }
             s.pop();
         }
-        if(isOperator(tokens[i]) == true)
+        if(isAnOperator(positionaltok[i]) == true)
         {
-            while(!s.empty() && Priority(s.top()) >= Priority(tokens[i]))
+            while(!s.empty() && Priority(s.top()) >= Priority(positionaltok[i]))
             {
                 outputList.push_back(s.top());
                 s.pop();
             }
-            s.push(tokens[i]);
+            s.push(positionaltok[i]);
         }
     }
     //pop any remaining operators from the stack and insert to outputlist
@@ -72,19 +78,19 @@ int infix2postfix(string infix)
 }
 bool TryParse(const string &symbol)
 {
-    bool isNumber = false;
+    bool isANumber = false;
     for(unsigned int i = 0; i < symbol.size(); i++)
     {
         if(!isdigit(symbol[i]))
         {
-            isNumber = false;
+            isANumber = false;
         }
         else
         {
-            isNumber = true;
+            isANumber = true;
         }
     }
-    return isNumber;
+    return isANumber;
 }
 int Priority(const string &c)
 {
@@ -105,7 +111,7 @@ int Priority(const string &c)
         return 0;
     }
 }
-bool isOperator(const string &c)
+bool isAnOperator(const string &c)
 {
     return (c == "+" || c == "-" || c == "*" || c == "/" || c == "^");
 }
