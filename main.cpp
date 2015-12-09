@@ -1,13 +1,20 @@
+//course: CS216-00x
+//Project: Lab Assignment 12
+//Date: 11/28/2015
+//Purpose: to build a parse tree which shows the relationships
+//         among operators and operands in an expression
+//         display the tree structure visually
+//Author: (your name)
+#include <vector>
 #include <string>
+#include <sstream>
+#include <iostream>
 #include <iterator>
 #include <stack>
-#include <sstream>
-#include <vector>
-#include <iostream>
 #include <fstream>
-#include <cstdlib>
+#include <cmath>
 #include "parsetree.h"
-
+#include <cstdlib>
 using namespace std;
 
 bool TryParse(const string &symbol);
@@ -26,11 +33,9 @@ int infix2postfix(string infix)
     vector<string> outputList;//output vector
     stack<string> s;//main stack
  
-    //operator: +, -, *, /, ^, ()
-    //operands: 1234567890
     for(unsigned int i = 0; i < tokens.size(); i++)  //read from right to left
     {
-        if(TryParse(tokens[i]))
+        if(TryParse(tokens[i]))//order for postfix
         {
             outputList.push_back(tokens[i]);
         }
@@ -57,8 +62,9 @@ int infix2postfix(string infix)
             s.push(tokens[i]);
         }
     }
-    //pop any remaining operators from the stack and insert to outputlist
-    while(!s.empty())
+
+//remoave leftover operators from stack and put ihn outputlist
+while(!s.empty())
     {
         outputList.push_back(s.top());
         s.pop();
@@ -70,7 +76,7 @@ int infix2postfix(string infix)
     }
     return 0;
 }
-bool TryParse(const string &symbol)
+bool TryParse(const string &symbol)//check if each in string are operand or operator (including parentheses)
 {
     bool isNumber = false;
     for(unsigned int i = 0; i < symbol.size(); i++)
@@ -86,12 +92,8 @@ bool TryParse(const string &symbol)
     }
     return isNumber;
 }
-int Priority(const string &c)
+int Priority(const string &c)//assign importance/order of operators
 {
-    if(c == "^")
-    {
-        return 3;
-    }
     if(c == "*" || c == "/")
     {
         return 2;
@@ -105,51 +107,76 @@ int Priority(const string &c)
         return 0;
     }
 }
-bool isOperator(const string &c)
+bool isOperator(const string &c) //check for operators
 {
-    return (c == "+" || c == "-" || c == "*" || c == "/" || c == "^");
+    return (c == "+" || c == "-" || c == "*" || c == "/");
 }
+
+//main function
 int main()
 {
 	ParseTree exprTree; 
-	string infix;
-	string sel;
-	bool more = true;
-	do
-	{
-		cout << endl;
-		cout << "***********************************************************\nSELECTIONS:\n1. Read an expression\n2. Display the prefix expression\n3. Display the infix expression\n4. Display the postfix expression\n5. Evaluate the expression using postfix notation.\n6. Exit\n***********************************************************" << endl;
-		getline(cin,sel);
+	bool option1 = false; //check if option 1 chosen first
+	string choice;
+	string expression; //entered infix expression
+	cout << endl;
+	while (choice != "6"){
+		cout << "********************************************************" << endl;
+		cout << "1. Read an expression" << endl;
+		cout << "2. Display the prefix expression" << endl; 
+		cout << "3. Display the infix expression" << endl;
+		cout << "4. Display the postfix expression" << endl;
+		cout << "5. Evaluate the expression using postfix notation" << endl;
+		cout << "6. Exit" << endl;
+		cout << "********************************************************" << endl;
+		cout << "Select: ";
+		getline(cin, choice);
 
-		if(sel == "6")
-		{
-			more = false;
-		}
-
-		if(sel == "1") {
-			cout << "Please type an infix expression: ";
-			getline(cin, infix);
-                        exprTree.buildTree(infix);
+		if (choice == "1"){
+			cout << "Enter an infix expression:" << endl;
+			cin >> expression;	
+			exprTree.buildTree(expression);
 			exprTree.printTree();
-		}
-		if(sel == "3" && infix.size() != 0){
-			cout << "Expression from user: " << infix << endl;
-			cout << "INFIX Expression: " << infix << endl;
-		}
+			cout << endl;
+			option1 = true;								 //option 1 chosen first
+		} // end choice 1
 
-		else{
-			cout << "Expression from user input is empty!" << endl;	
-		}
-		
-		if(sel == "4" && infix.size() != 0){
-			cout << "Expression from user input: " << infix << endl;
-			cout << "Outputting postifx:" << endl;
-			infix2postfix(infix);
-		}
+		if (choice == "2"){
+			if (option1 == false){ 							//option 1 not chosen first
+				cout << "Please enter an expression using Option 1" << endl;}
 
-		else{
-			cout << "Expression from user input is empty!" << endl;	
+			else { 										//option 1 chosen
+
+			} 
+		} //end option 2
+		if (choice == "3"){
+			if (option1 == false){ 							//option 1 not chosen first
+				cout << "Please enter an expression using Option 1" << endl;}
+
+			else { 										//option 1 chosen
+				cout << expression  << endl;			//infix expression
+			}
+
+		} //end option 3
+		if (choice == "4"){
+			if (option1 == false){ 							//option 1 not chosen first
+				cout << "Please enter an expression using Option 1" << endl;}
+
+			else {
+				cout <<"Inputted Expression: " << expression << endl;				//option 1 chosen
+				cout << "Postfix Expression: " << endl;
+				infix2postfix(expression);			
+				cout << endl;	
+			}
+
+		} //end option 4
+		if (choice == "5"){
+			if (option1 == false){ 							//option 1 not chosen first
+				cout << "Please enter an expression using Option 1" << endl;}
+
+			else { 										//option 1 chosen
+			}
 		}
-			
-	}while (more);
-} //end of program
+	} // end while
+	return 0;
+}
