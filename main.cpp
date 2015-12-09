@@ -1,5 +1,8 @@
 #include <string>
+#include <iterator>
+#include <stack>
 #include <sstream>
+#include <vector>
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -7,6 +10,105 @@
 
 using namespace std;
 
+bool TryParse(const string &symbol);
+int Priority(const string &c);
+bool isOperator(const string &c);
+int infix2postfix(string infix)
+{
+    istringstream iss(infix);
+    vector<string> tokens;//store the tokens here
+    while(iss)
+    {
+        string temp;
+        iss >>temp;
+        tokens.push_back(temp);
+    }
+    vector<string> outputList;//output vector
+    stack<string> s;//main stack
+ 
+    //operator: +, -, *, /, ^, ()
+    //operands: 1234567890
+    for(unsigned int i = 0; i < tokens.size(); i++)  //read from right to left
+    {
+        if(TryParse(tokens[i]))
+        {
+            outputList.push_back(tokens[i]);
+        }
+        if(tokens[i] == "(")
+        {
+            s.push(tokens[i]);
+        }
+        if(tokens[i] == ")")
+        {
+            while(!s.empty() && s.top() != "(")
+            {
+                outputList.push_back(s.top());
+                s.pop();
+            }
+            s.pop();
+        }
+        if(isOperator(tokens[i]) == true)
+        {
+            while(!s.empty() && Priority(s.top()) >= Priority(tokens[i]))
+            {
+                outputList.push_back(s.top());
+                s.pop();
+            }
+            s.push(tokens[i]);
+        }
+    }
+    //pop any remaining operators from the stack and insert to outputlist
+    while(!s.empty())
+    {
+        outputList.push_back(s.top());
+        s.pop();
+    }
+ 
+    for(unsigned int i = 0; i < outputList.size(); i++)
+    {
+        cout<<outputList[i] << " ";
+    }
+    return 0;
+}
+bool TryParse(const string &symbol)
+{
+    bool isNumber = false;
+    for(unsigned int i = 0; i < symbol.size(); i++)
+    {
+        if(!isdigit(symbol[i]))
+        {
+            isNumber = false;
+        }
+        else
+        {
+            isNumber = true;
+        }
+    }
+    return isNumber;
+}
+int Priority(const string &c)
+{
+    if(c == "^")
+    {
+        return 3;
+    }
+    if(c == "*" || c == "/")
+    {
+        return 2;
+    }
+    if(c== "+" || c == "-")
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+bool isOperator(const string &c)
+{
+    return (c == "+" || c == "-" || c == "*" || c == "/" || c == "^");
+}
 int main()
 {
 	ParseTree exprTree; 
@@ -42,7 +144,7 @@ int main()
 		if(sel == "4" && infix.size() != 0){
 			cout << "Expression from user input: " << infix << endl;
 			cout << "Outputting postifx:" << endl;
-			exprTree.postfix(exprTree.root);
+			infix2postfix(infix);
 		}
 
 		else{
