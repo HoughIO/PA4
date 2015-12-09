@@ -24,11 +24,13 @@ int main()
 			more = false;
 		}
 		if(sel == "1") {
+			cout << "Please type an infix expression: ";
 			getline(cin, infix);
                         exprTree.buildTree(infix);
 			exprTree.printTree();
 		}
 		if(sel == "4" && infix.size() != 0){
+			cout << "Outputting postifx:" << endl;
 			exprTree.postfix(exprTree.root);
 		}
 		else{
