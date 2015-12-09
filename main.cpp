@@ -132,6 +132,22 @@ int main()
                         exprTree.buildTree(infix);
 			exprTree.printTree();
 		}
+		if(sel == "2" ){
+			if(infix.size() != 0){
+				cout << "Expression from user: " << infix << endl;
+				cout << "Prefix Expression: ";
+				stringstream buffer;
+				buffer << infix2postfix(infix);
+				string y(buffer.str());
+				string z(y.rbegin(), y.rend());
+				cout << z << endl;
+
+
+			}
+			else{
+				cout << "Expression from user input is empty!" << endl;	
+			}
+		}
 		if(sel == "3" ){
 			if(infix.size() != 0){
 				cout << "Expression from user: " << infix << endl;
